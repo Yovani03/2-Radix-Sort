@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RadixSort {
@@ -27,7 +28,7 @@ public class RadixSort {
             System.err.println("Error al leer el archivo: " + rutaArchivo);
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            System.err.println("Datos no válidos en el archivo.");
+            System.err.println("Error: El archivo contiene datos que no son números enteros.");
             e.printStackTrace();
         }
         
@@ -39,6 +40,58 @@ public class RadixSort {
     }
 
     public void sort(List<Integer> lista) {
-        
+        if (lista == null || lista.size() == 0) {
+            return;
+        }
+
+        int[] arr = new int[lista.size()];
+        for (int i = 0; i < lista.size(); i++) {
+            arr[i] = lista.get(i);
+        }
+
+        int max = getMax(arr);
+
+        for (int exp = 1; max / exp > 0; exp *= 10) {
+            countingSort(arr, exp);
+        }
+
+        lista.clear();
+        for (int val : arr) {
+            lista.add(val);
+        }
+    }
+
+    private int getMax(int[] arr) {
+        int max = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+        return max;
+    }
+
+    private void countingSort(int[] arr, int exp) {
+        int n = arr.length;
+        int[] output = new int[n];
+        int[] count = new int[10];
+        Arrays.fill(count, 0);
+
+        for (int i = 0; i < n; i++) {
+            int digit = (arr[i] / exp) % 10;
+            count[digit]++;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            int digit = (arr[i] / exp) % 10;
+            output[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+
+        System.arraycopy(output, 0, arr, 0, n);
     }
 }
