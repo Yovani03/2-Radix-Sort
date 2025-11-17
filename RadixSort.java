@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +23,14 @@ public class RadixSort {
                     numeros.add(Integer.parseInt(valor.trim()));
                 }
             } else {
-                System.out.println("El archivo está vacío o no se pudo leer la línea.");
+                System.out.println("Datos no validos");
             }
 
         } catch (IOException e) {
-            System.err.println("Error al leer el archivo: " + rutaArchivo);
+            System.err.println("Error al leer el archivo: ");
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            System.err.println("Error: El archivo contiene datos que no son números enteros.");
+            System.err.println("Los datos deben de ser enteros");
             e.printStackTrace();
         }
         
@@ -93,5 +95,19 @@ public class RadixSort {
         }
 
         System.arraycopy(output, 0, arr, 0, n);
+    }
+
+    public void escribirDatos(String rutaArchivo, List<Integer> lista) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            for (int i = 0; i < lista.size(); i++) {
+                writer.write(Integer.toString(lista.get(i)));
+                if (i < lista.size() - 1) {
+                    writer.write(" ");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error ");
+            e.printStackTrace();
+        }
     }
 }
